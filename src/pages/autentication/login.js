@@ -11,9 +11,12 @@ import {
 import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
 import Toast from 'react-native-toast-message';
+//import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-firebase/auth';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const uri ="https://i.pinimg.com/564x/b3/7a/cb/b37acb2d24cbf66c1a8fa7fb63c70d4e.jpg";
-const profilePicture ="https://i.pinimg.com/564x/80/b4/eb/80b4eb114076e7cd344c357b14cdf91d.jpg";
+
+const uri ="https://fondosmil.com/fondo/23241.png";
+const profilePicture ="https://marketplace.canva.com/EAFGF71IIW8/1/0/1600w/canva-logo-sencillo-ne%C3%B3n-para-bar-oDjqEXclk-I.jpg";
 
 export default function Login() {
   const navigation = useNavigation();
@@ -30,16 +33,9 @@ export default function Login() {
 
       if (user) {
         setUserName(user.name);
-        Toast.show({
-          type: 'success',
-          position: 'center', 
-          text1: 'Ingresoo', 
-          visibilityTime: 3000, 
-          autoHide: true,
-        });
-        console.log("Ingreso!");
         navigation.navigate('ProductCard', { userName: user.name });
       } else {
+        
         console.log("Error de ingreso!");
         Toast.show({
           type: 'error',
@@ -50,29 +46,40 @@ export default function Login() {
         });
       }
     } catch (error) {
-      console.error('Error con backend', error);
+      console.error('Error de coneccion', error);
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      // Aquí puedes usar userInfo para iniciar sesión con Google
+      console.log('Usuario de Google:', userInfo.user);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // El usuario canceló la autenticación de Google
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // La autenticación de Google está en progreso
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // Los servicios de Google Play no están disponibles en el dispositivo
+        Alert.alert('Error', 'Los servicios de Google Play no están disponibles en este dispositivo.');
+      } else {
+        // Otro error inesperado
+        console.error('Error al iniciar sesión con Google:', error);
+      }
+    }
+  };
   return (
     <View style={styles.container}>
       <Image source={{ uri }} style={[styles.image, StyleSheet.absoluteFill]} />
       <View
         style={{
           width: 100,
-          height: 70,
-          backgroundColor: "purple",
-          top: 85,
+          height: 40,
+          backgroundColor: "#594f9b",
+          top: 70,
           position: "absolute",
-        }}
-      ></View>
-      <View
-        style={{
-          width: 100,
-          height: 70,
-          backgroundColor: "purple",
-          position: "absolute",
-          bottom: 85,
         }}
       ></View>
       <ScrollView
@@ -136,10 +143,18 @@ export default function Login() {
                 ENTRAR
               </Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.googleButton} onPress={signInWithGoogle}>
+                <View style={styles.googleButtonContent}>
+                <Text style={styles.googleButtonText}>Inicia sesión con </Text>
+                  <Icon name="google" size={20} color="#fff" style={styles.googleIcon} />                 
+                </View>
+              </TouchableOpacity>
             <View style={{ padding: 25 }}>
               <Text style={{ color: "#ffffff80" }}>Crear tu Cuenta Aqui</Text>
             </View>
+
           </View>
+          
         </BlurView>
       </ScrollView>
     </View>
@@ -160,7 +175,7 @@ const styles = StyleSheet.create({
   },
   login: {
     width: 320,
-    height: 550,
+    height: 610,
     borderColor: "#ffffff30",
     borderRadius: 10,
     borderWidth: 1,
@@ -190,8 +205,34 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "purple",
+    backgroundColor: "#8B4BF2",
     borderRadius: 10,
     marginTop: 10,
+  },
+  googleButton: {
+    marginTop: 10,
+    borderRadius: 5,
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  googleButtonContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  googleIcon: {
+    padding: 8, 
+    paddingBottom: 4, 
+    paddingRight: 5, 
+    paddingLeft: 9,
+    borderRadius: 5,
+    borderWidth: 1, 
+    borderColor: '#fff', 
+  },
+  googleButtonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

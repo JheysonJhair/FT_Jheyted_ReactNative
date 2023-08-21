@@ -10,7 +10,7 @@ const Welcome = () => {
     <View style={styles.container}>
       <View style={styles.containerLogo}>
         <Animatable.Text animation="flipInX" style={styles.containerLogoText}>
-          Inicio xgoo
+          XGOO
         </Animatable.Text>
       </View>
 
