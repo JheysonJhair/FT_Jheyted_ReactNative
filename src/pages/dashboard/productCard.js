@@ -11,6 +11,10 @@ import {
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import {
+  traerProductos,
+  traerPomociones,
+} from "../../controllers/productController.js";
 
 export default function ProductCard() {
   const route = useRoute();
@@ -20,67 +24,43 @@ export default function ProductCard() {
     "hsl(81, 88%, 39%)",
   ];
   const userName = route.params?.userName || "";
+  const perfil = route.params?.imgPerfil || "";
+
+  const [promociones, setPromociones] = useState([]);
+  const [producto, setProducto] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-  const [products, setProducts] = useState([
-    {
-      id: "1",
-      title: "Ruskaya + Everess",
-      imageUri:
-        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgOuWCjgJgxTB-OWyQG_7qcv66zCKoWPVmOHUYpxAkAUaCx16rH63UEkN0Qw6L5RzgycWiwPhhNw4bhHaNBRW1Byl0vF-nw0hiPSk3MxpgXrwyJg6WP7NncWVycCd_q2VhC56B76eQELjdqSRek8CWRGhpFDUbP0tJCv7pquRrrofdoCLfVsSKTvBNVOys/s700/10%20de%20los%20mejores%20c%C3%B3cteles%20de%20este%202023.png",
-    },
-    {
-      id: "2",
-      title: "Producto 2",
-      imageUri:
-        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgOuWCjgJgxTB-OWyQG_7qcv66zCKoWPVmOHUYpxAkAUaCx16rH63UEkN0Qw6L5RzgycWiwPhhNw4bhHaNBRW1Byl0vF-nw0hiPSk3MxpgXrwyJg6WP7NncWVycCd_q2VhC56B76eQELjdqSRek8CWRGhpFDUbP0tJCv7pquRrrofdoCLfVsSKTvBNVOys/s700/10%20de%20los%20mejores%20c%C3%B3cteles%20de%20este%202023.png",
-    },
-    {
-      id: "3",
-      title: "Producto 3",
-      imageUri:
-        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgOuWCjgJgxTB-OWyQG_7qcv66zCKoWPVmOHUYpxAkAUaCx16rH63UEkN0Qw6L5RzgycWiwPhhNw4bhHaNBRW1Byl0vF-nw0hiPSk3MxpgXrwyJg6WP7NncWVycCd_q2VhC56B76eQELjdqSRek8CWRGhpFDUbP0tJCv7pquRrrofdoCLfVsSKTvBNVOys/s700/10%20de%20los%20mejores%20c%C3%B3cteles%20de%20este%202023.png",
-    },
-    // Agrega más productos aquí según tus necesidades
-  ]);
-  const [products2, setProducts2] = useState([
-    {
-      id: "1",
-      title: "Ruskaya",
-      sabor: "Sabor apple",
-      precio: 25,
-      imageUri:
-        "https://wongfood.vtexassets.com/arquivos/ids/448169/Whisky-Johnnie-Walker-Red-Label-Botella-750-ml-2-1890.jpg?v=637602600177300000",
-    },
-    {
-      id: "2",
-      title: "Four Loko",
-      sabor: "Sabor blue",
-      precio: 12,
-      imageUri:
-        "https://wongfood.vtexassets.com/arquivos/ids/448169/Whisky-Johnnie-Walker-Red-Label-Botella-750-ml-2-1890.jpg?v=637602600177300000",
-    },
-    {
-      id: "Everess",
-      title: "Sabor neutral",
-      precio: 5,
-      imageUri:
-        "https://wongfood.vtexassets.com/arquivos/ids/448169/Whisky-Johnnie-Walker-Red-Label-Botella-750-ml-2-1890.jpg?v=637602600177300000",
-    },
-    // Agrega más productos aquí según tus necesidades
-  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const promocionesData = await traerPomociones();
+        setPromociones(promocionesData);
+
+        const productosData = await traerProductos();
+        setProducto(productosData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSearch = () => {
-    // Aquí puedes realizar la búsqueda con el texto ingresado en searchText
     Alert.alert("Búsqueda", `Buscar productos con: ${searchText}`);
   };
+
   return (
     <View style={styles.c}>
       <View style={styles.cont}>
         <View style={styles.container}>
           <View style={styles.productInfo}>
             <Text style={styles.productTitle}>
-              Hola, <Text style={{ fontWeight: "bold" }}>{userName}</Text>{" "}
+              Hola,{" "}
+              <Text style={{ fontWeight: "bold" }}>
+                {userName.charAt(0).toUpperCase()}
+                {userName.slice(1).toLowerCase()}
+              </Text>{" "}
             </Text>
             <Text style={styles.productDescription}>
               Cuida tu salud y mente con un trago.
@@ -88,7 +68,7 @@ export default function ProductCard() {
           </View>
           <Image
             source={{
-              uri: "https://i.pinimg.com/originals/cb/5d/64/cb5d64be736ab84602ee1bcd20303d4e.jpg",
+              uri: perfil,
             }}
             style={styles.productImage}
           />
@@ -118,16 +98,16 @@ export default function ProductCard() {
         showsHorizontalScrollIndicator={false}
         style={styles.productScrollView}
       >
-        {products.map((product) => (
-          <View key={product.id} style={styles.productItem}>
+        {promociones.map((promocion, index) => (
+          <View key={promocion.id} style={styles.productItem}>
             <Image
-              source={{ uri: product.imageUri }}
+              source={{ uri: promocion.imageUri }}
               style={styles.productItemImage}
             />
             <View style={styles.productLetra}>
-              <Text style={styles.productItemTitle}>{product.title}</Text>
+              <Text style={styles.productItemTitle}>{promocion.name}</Text>
               <View style={styles.text}>
-                <Text style={styles.rightText}>solo por 5 días</Text>
+                <Text style={styles.rightText}>{promocion.description}</Text>
                 <Text style={styles.leftText}>s/40</Text>
               </View>
             </View>
@@ -144,7 +124,7 @@ export default function ProductCard() {
         showsHorizontalScrollIndicator={false}
         style={styles.productScrollView2}
       >
-        {products2.map((product, index) => (
+        {producto.map((product, index) => (
           <View
             key={product.id}
             style={[
@@ -152,7 +132,7 @@ export default function ProductCard() {
               {
                 backgroundColor:
                   backgroundColors[index % backgroundColors.length],
-              }, // Cambiar el color de fondo según la posición
+              },
             ]}
           >
             <Image
@@ -162,8 +142,8 @@ export default function ProductCard() {
             <View style={styles.productLetra2}>
               <View style={styles.cuad}>
                 <View style={styles.text2}>
-                  <Text style={styles.productItemTitle2}>{product.title}</Text>
-                  <Text>{product.sabor}</Text>
+                  <Text style={styles.productItemTitle2}>{product.name}</Text>
+                  <Text>{product.description}</Text>
                 </View>
                 <Icon
                   name="heart"

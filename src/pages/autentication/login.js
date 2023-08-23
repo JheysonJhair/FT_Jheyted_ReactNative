@@ -10,66 +10,26 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
-import Toast from 'react-native-toast-message';
-//import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-firebase/auth';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 
+import { loginUser } from "../../controllers/userControllers.js";
 
-const uri ="https://fondosmil.com/fondo/23241.png";
-const profilePicture ="https://marketplace.canva.com/EAFGF71IIW8/1/0/1600w/canva-logo-sencillo-ne%C3%B3n-para-bar-oDjqEXclk-I.jpg";
+const uri = "https://fondosmil.com/fondo/23241.png";
+const profilePicture =
+  "https://marketplace.canva.com/EAFGF71IIW8/1/0/1600w/canva-logo-sencillo-ne%C3%B3n-para-bar-oDjqEXclk-I.jpg";
 
 export default function Login() {
   const navigation = useNavigation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
 
-  const LoginUsers = async () => {
-    try {
-      const response = await fetch('http://soundthezerb.ccontrolz.com/api/users/getall');
-      const data = await response.json();
-
-      const user = data.result.find((user) => user.email === email && user.password === password);
-
-      if (user) {
-        setUserName(user.name);
-        navigation.navigate('ProductCard', { userName: user.name });
-      } else {
-        
-        console.log("Error de ingreso!");
-        Toast.show({
-          type: 'error',
-          position: 'center', 
-          text1: 'Create una cuenta', 
-          visibilityTime: 3000, 
-          autoHide: true,
-        });
-      }
-    } catch (error) {
-      console.error('Error de coneccion', error);
-    }
+  const handleLogin = async () => {
+    loginUser(email, password, navigation, setUserName);
   };
 
-  const signInWithGoogle = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      // Aquí puedes usar userInfo para iniciar sesión con Google
-      console.log('Usuario de Google:', userInfo.user);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // El usuario canceló la autenticación de Google
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        // La autenticación de Google está en progreso
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // Los servicios de Google Play no están disponibles en el dispositivo
-        Alert.alert('Error', 'Los servicios de Google Play no están disponibles en este dispositivo.');
-      } else {
-        // Otro error inesperado
-        console.error('Error al iniciar sesión con Google:', error);
-      }
-    }
-  };
+  const handleGoogleSignIn = async () => {};
+
   return (
     <View style={styles.container}>
       <Image source={{ uri }} style={[styles.image, StyleSheet.absoluteFill]} />
@@ -115,8 +75,8 @@ export default function Login() {
               <TextInput
                 style={styles.input}
                 placeholder="xgoo@gmail.com"
-                value={email} 
-                onChangeText={(text) => setEmail(text)} 
+                value={email}
+                onChangeText={(text) => setEmail(text)}
               />
             </View>
             <View>
@@ -127,11 +87,11 @@ export default function Login() {
                 style={styles.input}
                 placeholder="contraseña"
                 secureTextEntry={true}
-                value={password} 
-                onChangeText={(text) => setPassword(text)} 
+                value={password}
+                onChangeText={(text) => setPassword(text)}
               />
             </View>
-            <TouchableOpacity style={styles.button} onPress={LoginUsers}>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
               <Text
                 style={{
                   fontSize: 18,
@@ -143,18 +103,24 @@ export default function Login() {
                 ENTRAR
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.googleButton} onPress={signInWithGoogle}>
-                <View style={styles.googleButtonContent}>
+            <TouchableOpacity
+              style={styles.googleButton}
+              onPress={handleGoogleSignIn}
+            >
+              <View style={styles.googleButtonContent}>
                 <Text style={styles.googleButtonText}>Inicia sesión con </Text>
-                  <Icon name="google" size={20} color="#fff" style={styles.googleIcon} />                 
-                </View>
-              </TouchableOpacity>
+                <Icon
+                  name="google"
+                  size={20}
+                  color="#fff"
+                  style={styles.googleIcon}
+                />
+              </View>
+            </TouchableOpacity>
             <View style={{ padding: 25 }}>
               <Text style={{ color: "#ffffff80" }}>Crear tu Cuenta Aqui</Text>
             </View>
-
           </View>
-          
         </BlurView>
       </ScrollView>
     </View>
@@ -213,26 +179,26 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 5,
     padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   googleButtonContent: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    flexDirection: "column",
+    alignItems: "center",
   },
   googleIcon: {
-    padding: 8, 
-    paddingBottom: 4, 
-    paddingRight: 5, 
+    padding: 8,
+    paddingBottom: 4,
+    paddingRight: 5,
     paddingLeft: 9,
     borderRadius: 5,
-    borderWidth: 1, 
-    borderColor: '#fff', 
+    borderWidth: 1,
+    borderColor: "#fff",
   },
   googleButtonText: {
     fontSize: 16,
-    color: '#fff',
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
