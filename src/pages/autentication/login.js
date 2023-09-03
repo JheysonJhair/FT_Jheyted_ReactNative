@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -12,11 +12,8 @@ import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-import { loginUser } from "../../controllers/userControllers.js";
-
 const uri = "https://fondosmil.com/fondo/23241.png";
-const profilePicture =
-  "https://marketplace.canva.com/EAFGF71IIW8/1/0/1600w/canva-logo-sencillo-ne%C3%B3n-para-bar-oDjqEXclk-I.jpg";
+const profilePicture = "https://marketplace.canva.com/EAFGF71IIW8/1/0/1600w/canva-logo-sencillo-ne%C3%B3n-para-bar-oDjqEXclk-I.jpg";
 
 export default function Login() {
   const navigation = useNavigation();
@@ -24,11 +21,31 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
 
-  const handleLogin = async () => {
-    loginUser(email, password, navigation, setUserName);
-  };
-
   const handleGoogleSignIn = async () => {};
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("https://xgoobk.ccontrolz.com/user");
+      const users = await response.json();
+
+      const user = users.find(
+        (user) => user.email === email && user.password === password
+      );
+
+      if (user) {
+        console.log("Ingreso!");
+        setUserName(user.firstName);
+        navigation.navigate("ProductCard", {
+          userName: user.firstName,
+          imgPerfil: user.profileImage,
+        });
+      } else {
+        console.log("Error de ingreso!");
+        Alert.alert("Error de ingreso", "Credenciales incorrectas.");
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+    }
+  };
 
   return (
     <View style={styles.container}>

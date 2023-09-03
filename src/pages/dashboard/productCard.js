@@ -11,10 +11,6 @@ import {
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {
-  traerProductos,
-  traerPomociones,
-} from "../../controllers/productController.js";
 
 export default function ProductCard() {
   const route = useRoute();
@@ -26,29 +22,75 @@ export default function ProductCard() {
   const userName = route.params?.userName || "";
   const perfil = route.params?.imgPerfil || "";
 
-  const [promociones, setPromociones] = useState([]);
-  const [producto, setProducto] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const promocionesData = await traerPomociones();
-        setPromociones(promocionesData);
-
-        const productosData = await traerProductos();
-        setProducto(productosData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const [promociones, setPromociones] = useState([]);
+  const [productos, setProductos] = useState([]);
 
   const handleSearch = () => {
     Alert.alert("Búsqueda", `Buscar productos con: ${searchText}`);
   };
+
+  useEffect(() => {
+    fetch("https://xgoobk.ccontrolz.com/productsupplier")
+      .then((response) => response.json())
+      .then((data) => {
+        const promocionesPromises = data.map((item) => {
+          return fetch(
+            `https://xgoobk.ccontrolz.com/products/${item.product_id}`
+          )
+            .then((response) => response.json())
+            .then((productData) => {
+              return {
+                productId: item.product_id,
+                productName: productData.name,
+                productFlavor: productData.flavor,
+                promotionPrice: item.promotionPrice,
+                imgProduct: item.imgProduct,
+              };
+            });
+        });
+
+        Promise.all(promocionesPromises)
+          .then((promocionesData) => {
+            const filteredPromociones = promocionesData.filter(
+              (promocion) => promocion.promotionPrice > 0
+            );
+            setPromociones(filteredPromociones);
+          })
+          .catch((error) => {
+            console.error("Error fetching promociones data:", error);
+          });
+
+        const productosData = data.filter((item) => item.priceProduct > 0);
+        const productosPromises = productosData.map((item) => {
+          return fetch(
+            `https://xgoobk.ccontrolz.com/products/${item.product_id}`
+          )
+            .then((response) => response.json())
+            .then((productData) => {
+              return {
+                productId: item.product_id,
+                productName: productData.name,
+                productFlavor: productData.flavor,
+                productPrice: item.priceProduct,
+                imgProduct: item.imgProduct,
+              };
+            });
+        });
+
+        Promise.all(productosPromises)
+          .then((productosData) => {
+            setProductos(productosData);
+          })
+          .catch((error) => {
+            console.error("Error fetching productos data:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   return (
     <View style={styles.c}>
@@ -98,17 +140,19 @@ export default function ProductCard() {
         showsHorizontalScrollIndicator={false}
         style={styles.productScrollView}
       >
-        {promociones.map((promocion, index) => (
-          <View key={promocion.id} style={styles.productItem}>
+        {promociones.map((promocion) => (
+          <View key={promocion.idProductSupplier} style={styles.productItem}>
             <Image
-              source={{ uri: promocion.imageUri }}
+              source={{ uri: promocion.imgProduct }}
               style={styles.productItemImage}
             />
             <View style={styles.productLetra}>
-              <Text style={styles.productItemTitle}>{promocion.name}</Text>
+              <Text style={styles.productItemTitle}>
+                {promocion.productName}
+              </Text>
               <View style={styles.text}>
-                <Text style={styles.rightText}>{promocion.description}</Text>
-                <Text style={styles.leftText}>s/40</Text>
+                <Text style={styles.rightText}>Solo por 5 dias </Text>
+                <Text style={styles.leftText}>{promocion.promotionPrice}</Text>
               </View>
             </View>
           </View>
@@ -124,9 +168,9 @@ export default function ProductCard() {
         showsHorizontalScrollIndicator={false}
         style={styles.productScrollView2}
       >
-        {producto.map((product, index) => (
+        {productos.map((product, index) => (
           <View
-            key={product.id}
+            key={product.productId}
             style={[
               styles.productItem2,
               {
@@ -136,14 +180,16 @@ export default function ProductCard() {
             ]}
           >
             <Image
-              source={{ uri: product.imageUri }}
+              source={{ uri: product.imgProduct }}
               style={styles.productItemImage2}
             />
             <View style={styles.productLetra2}>
               <View style={styles.cuad}>
                 <View style={styles.text2}>
-                  <Text style={styles.productItemTitle2}>{product.name}</Text>
-                  <Text>{product.description}</Text>
+                  <Text style={styles.productItemTitle2}>
+                    {product.productName}
+                  </Text>
+                  <Text>Sabor {product.productFlavor}</Text>
                 </View>
                 <Icon
                   name="heart"
@@ -153,7 +199,9 @@ export default function ProductCard() {
                 />
               </View>
               <View style={styles.cuad}>
-                <Text style={styles.productItemPreci2}>s/{product.precio}</Text>
+                <Text style={styles.productItemPreci2}>
+                  s/{product.productPrice}
+                </Text>
                 <Icon
                   name="shopping-cart"
                   size={20}
@@ -331,7 +379,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     padding: 10,
     marginRight: 10,
-    width: 160,
+    width: 170,
     borderRadius: 10,
   },
 
@@ -343,7 +391,7 @@ const styles = StyleSheet.create({
   },
   cuad: {
     marginTop: 10,
-    flexDirection: "row",
+
     justifyContent: "space-between",
   },
   productItemTitle2: {
