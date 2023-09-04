@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ProductCard() {
   const route = useRoute();
@@ -21,6 +22,8 @@ export default function ProductCard() {
   ];
   const userName = route.params?.userName || "";
   const perfil = route.params?.imgPerfil || "";
+
+  const navigation = useNavigation();
 
   const [searchText, setSearchText] = useState("");
 
@@ -44,6 +47,8 @@ export default function ProductCard() {
               return {
                 productId: item.product_id,
                 productName: productData.name,
+                productVol: productData.volume,
+                productMl: productData.ml,
                 productFlavor: productData.flavor,
                 promotionPrice: item.promotionPrice,
                 imgProduct: item.imgProduct,
@@ -72,6 +77,8 @@ export default function ProductCard() {
               return {
                 productId: item.product_id,
                 productName: productData.name,
+                productVol: productData.volume,
+                productMl: productData.ml,
                 productFlavor: productData.flavor,
                 productPrice: item.priceProduct,
                 imgProduct: item.imgProduct,
@@ -140,8 +147,8 @@ export default function ProductCard() {
         showsHorizontalScrollIndicator={false}
         style={styles.productScrollView}
       >
-        {promociones.map((promocion) => (
-          <View key={promocion.idProductSupplier} style={styles.productItem}>
+        {promociones.map((promocion, index) => (
+          <View key={index} style={styles.productItem}>
             <Image
               source={{ uri: promocion.imgProduct }}
               style={styles.productItemImage}
@@ -151,13 +158,14 @@ export default function ProductCard() {
                 {promocion.productName}
               </Text>
               <View style={styles.text}>
-                <Text style={styles.rightText}>Solo por 5 dias </Text>
+                <Text style={styles.rightText}>Solo por 5 días </Text>
                 <Text style={styles.leftText}>{promocion.promotionPrice}</Text>
               </View>
             </View>
           </View>
         ))}
       </ScrollView>
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Todos</Text>
@@ -169,48 +177,54 @@ export default function ProductCard() {
         style={styles.productScrollView2}
       >
         {productos.map((product, index) => (
-          <View
+          <TouchableOpacity
             key={product.productId}
-            style={[
-              styles.productItem2,
-              {
-                backgroundColor:
-                  backgroundColors[index % backgroundColors.length],
-              },
-            ]}
+            onPress={() =>
+              navigation.navigate("ProductScreen", { product: product })
+            }
           >
-            <Image
-              source={{ uri: product.imgProduct }}
-              style={styles.productItemImage2}
-            />
-            <View style={styles.productLetra2}>
-              <View style={styles.cuad}>
-                <View style={styles.text2}>
-                  <Text style={styles.productItemTitle2}>
-                    {product.productName}
-                  </Text>
-                  <Text>Sabor {product.productFlavor}</Text>
+            <View
+              style={[
+                styles.productItem2,
+                {
+                  backgroundColor:
+                    backgroundColors[index % backgroundColors.length],
+                },
+              ]}
+            >
+              <Image
+                source={{ uri: product.imgProduct }}
+                style={styles.productItemImage2}
+              />
+              <View style={styles.productLetra2}>
+                <View style={styles.cuad}>
+                  <View style={styles.text2}>
+                    <Text style={styles.productItemTitle2}>
+                      {product.productName.split(" ").slice(0, -1).join(" ")}
+                    </Text>
+                    <Text>Sabor {product.productFlavor}</Text>
+                  </View>
+                  <Icon
+                    name="heart"
+                    size={17}
+                    color="#000"
+                    style={styles.LikeIcon}
+                  />
                 </View>
-                <Icon
-                  name="heart"
-                  size={17}
-                  color="#000"
-                  style={styles.LikeIcon}
-                />
-              </View>
-              <View style={styles.cuad}>
-                <Text style={styles.productItemPreci2}>
-                  s/{product.productPrice}
-                </Text>
-                <Icon
-                  name="shopping-cart"
-                  size={20}
-                  color="#000"
-                  style={styles.buyIcon}
-                />
+                <View style={styles.cuad}>
+                  <Text style={styles.productItemPreci2}>
+                    s/{product.productPrice}
+                  </Text>
+                  <Icon
+                    name="shopping-cart"
+                    size={20}
+                    color="#000"
+                    style={styles.buyIcon}
+                  />
+                </View>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
       <View style={styles.horizontalLine}></View>
@@ -347,7 +361,7 @@ const styles = StyleSheet.create({
   },
   productItemTitle: {
     marginTop: 5,
-    fontSize: 24,
+    fontSize: 19,
     color: "#fff",
     fontWeight: "bold",
   },
@@ -357,13 +371,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   leftText: {
-    fontSize: 16,
+    fontSize: 13,
     marginLeft: 20,
     fontWeight: "bold",
     color: "yellow",
   },
   rightText: {
-    fontSize: 16,
+    fontSize: 13,
     fontStyle: "italic",
     color: "white",
   },
@@ -391,12 +405,12 @@ const styles = StyleSheet.create({
   },
   cuad: {
     marginTop: 10,
-
+    flexDirection: "row",
     justifyContent: "space-between",
   },
   productItemTitle2: {
     fontWeight: "bold",
-    fontSize: 22,
+    fontSize: 15,
   },
   productItemPreci2: {
     fontWeight: "bold",

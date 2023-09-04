@@ -83,7 +83,7 @@ export default function Login() {
                 letterSpacing: 2,
               }}
             >
-              XGOO
+              XGOSTORE
             </Text>
             <View>
               <Text style={{ fontSize: 17, color: "#fff", letterSpacing: 1 }}>
