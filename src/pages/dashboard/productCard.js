@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
   Text,
@@ -101,7 +102,12 @@ export default function ProductCard() {
 
   return (
     <View style={styles.c}>
-      <View style={styles.cont}>
+      <LinearGradient
+        colors={["rgba(71, 46, 204, 1)", "rgba(139, 75, 242, 1)"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={styles.cont} 
+      >
         <View style={styles.container}>
           <View style={styles.productInfo}>
             <Text style={styles.productTitle}>
@@ -133,7 +139,8 @@ export default function ProductCard() {
             <Icon name="search" size={20} color="#000" />
           </TouchableOpacity>
         </View>
-      </View>
+      </LinearGradient>
+
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Promociones</Text>
@@ -148,20 +155,30 @@ export default function ProductCard() {
         style={styles.productScrollView}
       >
         {promociones.map((promocion, index) => (
-          <View key={index} style={styles.productItem}>
-            <Image
-              source={{ uri: promocion.imgProduct }}
-              style={styles.productItemImage}
-            />
-            <View style={styles.productLetra}>
-              <Text style={styles.productItemTitle}>
-                {promocion.productName}
-              </Text>
-              <View style={styles.text}>
-                <Text style={styles.rightText}>Solo por 5 días </Text>
-                <Text style={styles.leftText}>{promocion.promotionPrice}</Text>
+          <View key={index}>
+            <LinearGradient
+              colors={["rgba(49, 68, 39, 1)", "rgba(26, 34, 3, 1)"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.productItem}
+            >
+              <Image
+                source={{ uri: promocion.imgProduct }}
+                style={styles.productItemImage}
+                resizeMode="contain"
+              />
+              <View style={styles.productLetra}>
+                <Text style={styles.productItemTitle}>
+                  {promocion.productName}
+                </Text>
+                <View style={styles.text}>
+                  <Text style={styles.rightText}>Solo por 5 días </Text>
+                  <Text style={styles.leftText}>
+                    s/ {promocion.promotionPrice}
+                  </Text>
+                </View>
               </View>
-            </View>
+            </LinearGradient>
           </View>
         ))}
       </ScrollView>
@@ -183,46 +200,53 @@ export default function ProductCard() {
               navigation.navigate("ProductScreen", { product: product })
             }
           >
-            <View
-              style={[
-                styles.productItem2,
-                {
-                  backgroundColor:
-                    backgroundColors[index % backgroundColors.length],
-                },
-              ]}
-            >
-              <Image
-                source={{ uri: product.imgProduct }}
-                style={styles.productItemImage2}
-              />
-              <View style={styles.productLetra2}>
-                <View style={styles.cuad}>
-                  <View style={styles.text2}>
-                    <Text style={styles.productItemTitle2}>
-                      {product.productName.split(" ").slice(0, -1).join(" ")}
-                    </Text>
-                    <Text>Sabor {product.productFlavor}</Text>
+            <View>
+              <LinearGradient
+                colors={
+                  index % 3 === 0
+                    ? ["rgba(162, 187, 12, 1)", "rgba(183, 94, 12, 1)"]
+                    : index % 3 === 1
+                    ? ["rgba(15, 12, 187, 1)", "rgba(12, 152, 183, 1)"]
+                    : ["rgba(152, 187, 12, 1)", "rgba(16, 183, 12, 1)"]
+                }
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.productItem2}
+              >
+                <Image
+                  source={{ uri: product.imgProduct }}
+                  style={styles.productItemImage2}
+                  resizeMode="contain"
+                />
+
+                <View style={styles.productLetra2}>
+                  <View style={styles.cuad}>
+                    <View style={styles.text2}>
+                      <Text style={styles.productItemTitle2}>
+                        {product.productName.split(" ").slice(0, -1).join(" ")}
+                      </Text>
+                      <Text>Sabor {product.productFlavor}</Text>
+                    </View>
+                    <Icon
+                      name="heart"
+                      size={17}
+                      color="#000"
+                      style={styles.LikeIcon}
+                    />
                   </View>
-                  <Icon
-                    name="heart"
-                    size={17}
-                    color="#000"
-                    style={styles.LikeIcon}
-                  />
+                  <View style={styles.cuad}>
+                    <Text style={styles.productItemPreci2}>
+                      s/{product.productPrice}
+                    </Text>
+                    <Icon
+                      name="shopping-cart"
+                      size={20}
+                      color="#000"
+                      style={styles.buyIcon}
+                    />
+                  </View>
                 </View>
-                <View style={styles.cuad}>
-                  <Text style={styles.productItemPreci2}>
-                    s/{product.productPrice}
-                  </Text>
-                  <Icon
-                    name="shopping-cart"
-                    size={20}
-                    color="#000"
-                    style={styles.buyIcon}
-                  />
-                </View>
-              </View>
+              </LinearGradient>
             </View>
           </TouchableOpacity>
         ))}
@@ -252,7 +276,7 @@ export default function ProductCard() {
 const styles = StyleSheet.create({
   c: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "rgba(14, 12, 20, 1)",
   },
   cont: {
     backgroundColor: "hsl(262, 47%, 55%)",
@@ -341,7 +365,7 @@ const styles = StyleSheet.create({
 
   productItem: {
     flexDirection: "row",
-    padding: 20,
+    padding: 10,
     marginRight: 10,
     width: Dimensions.get("window").width - 50,
     backgroundColor: "rgba(25, 36, 19, 1)",
@@ -349,8 +373,8 @@ const styles = StyleSheet.create({
   },
 
   productItemImage: {
-    width: 130,
-    height: 120,
+    width: 100,
+    height: 150,
     borderRadius: 10,
     marginRight: 30,
   },
@@ -364,6 +388,7 @@ const styles = StyleSheet.create({
     fontSize: 19,
     color: "#fff",
     fontWeight: "bold",
+    textTransform: "uppercase",
   },
   text: {
     flexDirection: "row",
@@ -371,7 +396,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   leftText: {
-    fontSize: 13,
+    fontSize: 20,
     marginLeft: 20,
     fontWeight: "bold",
     color: "yellow",

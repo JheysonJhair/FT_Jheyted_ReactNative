@@ -8,7 +8,7 @@ const ProductScreen = ({ route }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
-  const { product } = route.params; // Usar el producto recibido como parámetro
+  const { product } = route.params;
 
   const navigation = useNavigation();
 
@@ -107,6 +107,7 @@ const ProductScreen = ({ route }) => {
           <Image
             source={{ uri: product.imgProduct }}
             style={styles.productImage}
+            resizeMode="contain"
           />
         </View>
         <View style={styles.rightColumn}>
@@ -151,13 +152,27 @@ const ProductScreen = ({ route }) => {
                 <Icon name="plus" size={24} color="white" />
               </View>
             </TouchableOpacity>
-            {/* Otras acciones relacionadas con la mezcla aquí */}
           </View>
         </View>
       </View>
       <View style={styles.waveContainer}>
         <View style={styles.wave}></View>
       </View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("SelectedProduct", {
+            productName: product.productName,
+            productPrice: product.productPrice.toFixed(2),
+            productQuantity: quantity,
+            productFlavor: selectedFlavor,
+          });
+        }}
+      >
+        <Image
+          source={require("../../../assets/logo.png")}
+          style={styles.logo}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -212,7 +227,7 @@ const styles = StyleSheet.create({
   },
   productName: {
     fontSize: 19,
-    textTransform : "uppercase",
+    textTransform: "uppercase",
     fontWeight: "bold",
     color: "white",
   },
@@ -224,7 +239,7 @@ const styles = StyleSheet.create({
   productImage: {
     marginTop: 18,
     width: 270,
-    height: 320,
+    height: 390,
     resizeMode: "cover",
     marginBottom: 20,
   },
@@ -309,6 +324,12 @@ const styles = StyleSheet.create({
     borderRadius: 240,
     backgroundColor: "#8B4BF2",
     opacity: 0.7,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    alignSelf: "center",
+    marginBottom: 20,
   },
 });
 

@@ -7,13 +7,16 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  KeyboardAvoidingView, // Importa KeyboardAvoidingView
+  Platform, // Importa Platform
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const uri = "https://fondosmil.com/fondo/23241.png";
-const profilePicture = "https://marketplace.canva.com/EAFGF71IIW8/1/0/1600w/canva-logo-sencillo-ne%C3%B3n-para-bar-oDjqEXclk-I.jpg";
+const profilePicture =
+  "https://marketplace.canva.com/EAFGF71IIW8/1/0/1600w/canva-logo-sencillo-ne%C3%B3n-para-bar-oDjqEXclk-I.jpg";
 
 export default function Login() {
   const navigation = useNavigation();
@@ -47,18 +50,17 @@ export default function Login() {
     }
   };
 
+  const handleRegister = () => {
+    navigation.navigate("RegistroScreen");
+  };
+
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
       <Image source={{ uri }} style={[styles.image, StyleSheet.absoluteFill]} />
-      <View
-        style={{
-          width: 100,
-          height: 40,
-          backgroundColor: "#594f9b",
-          top: 70,
-          position: "absolute",
-        }}
-      ></View>
+
       <ScrollView
         contentContainerStyle={{
           flex: 1,
@@ -68,79 +70,79 @@ export default function Login() {
           justifyContent: "center",
         }}
       >
-        <BlurView intensity={50}>
-          <View style={styles.login}>
-            <Image
-              source={{ uri: profilePicture }}
-              style={styles.profilePicture}
+        <View style={styles.login}>
+          <Image
+            source={require("../../../assets/logo.png")}
+            style={styles.profilePicture}
+          />
+          <Text
+            style={{
+              fontSize: 35,
+              color: "#fff",
+              fontWeight: 700,
+              padding: 10,
+              letterSpacing: 2,
+            }}
+          >
+            XGOSTORE
+          </Text>
+          <View>
+            <Text style={{ fontSize: 17, color: "#fff", letterSpacing: 1 }}>
+              Correo
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="xgoo@gmail.com"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
             />
+          </View>
+          <View>
+            <Text style={{ fontSize: 17, color: "#fff", letterSpacing: 1 }}>
+              Contraseña
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="contraseña"
+              secureTextEntry={true}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+            />
+          </View>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text
               style={{
-                fontSize: 35,
+                fontSize: 18,
                 color: "#fff",
-                fontWeight: 700,
-                padding: 10,
                 letterSpacing: 2,
+                fontWeight: 700,
               }}
             >
-              XGOSTORE
+              ENTRAR
             </Text>
-            <View>
-              <Text style={{ fontSize: 17, color: "#fff", letterSpacing: 1 }}>
-                Correo
-              </Text>
-              <TextInput
-                style={styles.input}
-                placeholder="xgoo@gmail.com"
-                value={email}
-                onChangeText={(text) => setEmail(text)}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.googleButton}
+            onPress={handleGoogleSignIn}
+          >
+            <View style={styles.googleButtonContent}>
+              <Text style={styles.googleButtonText}>Inicia sesión con </Text>
+              <Icon
+                name="google"
+                size={20}
+                color="#fff"
+                style={styles.googleIcon}
               />
             </View>
-            <View>
-              <Text style={{ fontSize: 17, color: "#fff", letterSpacing: 1 }}>
-                Contraseña
-              </Text>
-              <TextInput
-                style={styles.input}
-                placeholder="contraseña"
-                secureTextEntry={true}
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-              />
-            </View>
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-              <Text
-                style={{
-                  fontSize: 18,
-                  color: "#fff",
-                  letterSpacing: 2,
-                  fontWeight: 700,
-                }}
-              >
-                ENTRAR
-              </Text>
+          </TouchableOpacity>
+          <View style={{ padding: 25 }}>
+            <TouchableOpacity onPress={handleRegister}>
+              <Text style={{ color: "#ffffff80" }}>Crear tu Cuenta Aquí</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.googleButton}
-              onPress={handleGoogleSignIn}
-            >
-              <View style={styles.googleButtonContent}>
-                <Text style={styles.googleButtonText}>Inicia sesión con </Text>
-                <Icon
-                  name="google"
-                  size={20}
-                  color="#fff"
-                  style={styles.googleIcon}
-                />
-              </View>
-            </TouchableOpacity>
-            <View style={{ padding: 25 }}>
-              <Text style={{ color: "#ffffff80" }}>Crear tu Cuenta Aqui</Text>
-            </View>
           </View>
-        </BlurView>
+        </View>
       </ScrollView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -157,24 +159,23 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   login: {
-    width: 320,
-    height: 610,
+    width: 360,
+    height: 670,
     borderColor: "#ffffff30",
     borderRadius: 10,
-    borderWidth: 1,
+
     padding: 10,
     alignItems: "center",
   },
   profilePicture: {
+    padding: 10,
     width: 100,
     height: 100,
-    borderRadius: 50,
-    borderColor: "#fff",
     borderWidth: 1,
     margin: 15,
   },
   input: {
-    width: 250,
+    width: 300,
     height: 50,
     backgroundColor: "#ffffff60",
     padding: 10,
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    width: 250,
+    width: 300,
     height: 50,
     justifyContent: "center",
     alignItems: "center",
