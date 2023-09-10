@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import * as Animatable from "react-native-animatable";
@@ -9,8 +9,9 @@ const Welcome = () => {
   return (
     <View style={styles.container}>
       <View style={styles.containerLogo}>
+        <Image source={require("../../assets/logo.png")} style={styles.logo} />
         <Animatable.Text animation="flipInX" style={styles.containerLogoText}>
-          XGOSTORE
+          XGoStor
         </Animatable.Text>
       </View>
 
@@ -86,6 +87,12 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     color: "#fff",
+  },
+  logo: {
+    width: 120,
+    height: 120,
+    alignSelf: "center",
+    marginBottom: 20,
   },
 });
 

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Alert } from "react-native";
+import Modal from "react-native-modal";
 import {
   Image,
   StyleSheet,
@@ -25,6 +27,12 @@ export default function Login() {
   const [userName, setUserName] = useState("");
 
   const handleGoogleSignIn = async () => {};
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   const handleLogin = async () => {
     try {
       const response = await fetch("https://xgoobk.ccontrolz.com/user");
@@ -35,15 +43,24 @@ export default function Login() {
       );
 
       if (user) {
-        console.log("Ingreso!");
-        setUserName(user.firstName);
-        navigation.navigate("ProductCard", {
-          userName: user.firstName,
-          imgPerfil: user.profileImage,
-        });
+        const birthDate = new Date(user.birthDate);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+
+        if (age >= 16) {
+          console.log("Ingreso!");
+          setUserName(user.firstName);
+          navigation.navigate("ProductCard", {
+            userName: user.firstName,
+            imgPerfil: user.profileImage,
+          });
+        } else {
+          console.log("No eres mayor de 18 años.");
+          toggleModal();
+        }
       } else {
         console.log("Error de ingreso!");
-        Alert.alert("Error de ingreso", "Credenciales incorrectas.");
+        Alert.alert("Error de ingreso", "Create una cuenta!");
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
@@ -84,7 +101,7 @@ export default function Login() {
               letterSpacing: 2,
             }}
           >
-            XGOSTORE
+            XGoSTor
           </Text>
           <View>
             <Text style={{ fontSize: 17, color: "#fff", letterSpacing: 1 }}>
@@ -92,7 +109,7 @@ export default function Login() {
             </Text>
             <TextInput
               style={styles.input}
-              placeholder="xgoo@gmail.com"
+              placeholder="xgostor@gmail.com"
               value={email}
               onChangeText={(text) => setEmail(text)}
             />
@@ -141,6 +158,17 @@ export default function Login() {
             </TouchableOpacity>
           </View>
         </View>
+        <Modal isVisible={isModalVisible}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>¡Oops!</Text>
+            <Text style={styles.modalText}>
+              Debes ser mayor de 16 años para ingresar.
+            </Text>
+            <TouchableOpacity onPress={toggleModal} style={styles.modalButton}>
+              <Text style={styles.buttonText}>Entendido</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -218,5 +246,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#fff",
     fontWeight: "bold",
+  },
+  modalContainer: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  modalButton: {
+    backgroundColor: "#ff0000",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
   },
 });

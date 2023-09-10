@@ -8,23 +8,21 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView, // Importa KeyboardAvoidingView
-  Platform, // Importa Platform
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { BlurView } from "expo-blur";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function RegistroScreen() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [age, setAge] = useState("");
+  const [birthdate, setBirthdate] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
-  const uri =
-    "https://fondosmil.com/fondo/23241.png";
+  const uri = "https://fondosmil.com/fondo/23241.png";
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -46,15 +44,18 @@ export default function RegistroScreen() {
 
   const handleRegistro = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/user/insert", {
-        email,
-        password,
-        firstName,
-        lastName,
-        age,
-        profileImg:
-          "https://media.gq.com.mx/photos/5e1653feab1f9200081c6563/16:9/w_2560%2Cc_limit/tips-para-tinder-y-que-tu-perfil-por-fin-tenga-exito-este-ano.jpg",
-      });
+      const response = await axios.post(
+        "https://xgoobk.ccontrolz.com/user/insert",
+        {
+          email,
+          password,
+          firstName,
+          lastName,
+          birthdate,
+          profileImg:
+            "https://media.gq.com.mx/photos/5e1653feab1f9200081c6563/16:9/w_2560%2Cc_limit/tips-para-tinder-y-que-tu-perfil-por-fin-tenga-exito-este-ano.jpg",
+        }
+      );
 
       if (response.status === 200) {
         navigation.navigate("Login");
@@ -102,11 +103,12 @@ export default function RegistroScreen() {
           <View>
             <TextInput
               style={styles.input}
-              placeholder="Edad"
-              value={age}
-              onChangeText={(text) => setAge(text)}
+              placeholder="Fecha de nacimiento (YYYY-MM-DD)"
+              value={birthdate}
+              onChangeText={(text) => setBirthdate(text)}
             />
           </View>
+
           <View>
             <TextInput
               style={styles.input}
