@@ -254,19 +254,19 @@ export default function ProductCard() {
       <View style={styles.horizontalLine}></View>
       <View style={styles.socialButtonsContainer}>
         <TouchableOpacity style={styles.socialButtonXD}>
-          <Icon name="home" size={30} color="#fff" />
+          <Icon name="home" size={20} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialButton}>
-          <Icon name="bell" size={30} color="#fff" />
+          <Icon name="envelope" size={20} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialButton}>
-          <Icon name="heart" size={30} color="#fff" />
+          <Icon name="star" size={20} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialButton}>
-          <Icon name="instagram" size={30} color="#fff" />
+          <Icon name="cart-plus" size={20} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialButton}>
-          <Icon name="facebook" size={30} color="#fff" />
+          <Icon name="bars" size={20} color="#fff" />
         </TouchableOpacity>
       </View>
     </View>
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
   },
   //---------------------------------------------------------------
   horizontalLine: {
-    borderBottomColor: "gray",
+    borderBottomColor: "dimgray",
     borderBottomWidth: 1,
   },
   socialButtonsContainer: {

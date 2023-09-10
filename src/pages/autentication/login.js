@@ -9,12 +9,12 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView, // Importa KeyboardAvoidingView
-  Platform, // Importa Platform
+  KeyboardAvoidingView, 
+  Platform, 
 } from "react-native";
-import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
+
 
 const uri = "https://fondosmil.com/fondo/23241.png";
 const profilePicture =
@@ -39,7 +39,7 @@ export default function Login() {
       const users = await response.json();
 
       const user = users.find(
-        (user) => user.email === email && user.password === password
+        (user) => user.email == email && user.password == password
       );
 
       if (user) {

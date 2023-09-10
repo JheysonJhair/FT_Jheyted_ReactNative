@@ -17,7 +17,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 export default function RegistroScreen() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [birthdate, setBirthdate] = useState("");
+  const [birthDate, setBirthDate] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -51,16 +51,19 @@ export default function RegistroScreen() {
           password,
           firstName,
           lastName,
-          birthdate,
-          profileImg:
-            "https://media.gq.com.mx/photos/5e1653feab1f9200081c6563/16:9/w_2560%2Cc_limit/tips-para-tinder-y-que-tu-perfil-por-fin-tenga-exito-este-ano.jpg",
+          birthDate,
+          profileImage:
+            "https://img.freepik.com/fotos-premium/manzana-roja-hoja-verde_914455-660.jpg",
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         navigation.navigate("Login");
       } else {
-        console.error("Error en la solicitud de registro");
+        console.error(
+          "Error en la solicitud de registro: Código de estado",
+          response.status
+        );
       }
     } catch (error) {
       console.error("Error en la solicitud de registro", error);
@@ -104,8 +107,8 @@ export default function RegistroScreen() {
             <TextInput
               style={styles.input}
               placeholder="Fecha de nacimiento (YYYY-MM-DD)"
-              value={birthdate}
-              onChangeText={(text) => setBirthdate(text)}
+              value={birthDate}
+              onChangeText={(text) => setBirthDate(text)}
             />
           </View>
 

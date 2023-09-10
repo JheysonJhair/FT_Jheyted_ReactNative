@@ -124,7 +124,7 @@ const ProductScreen = ({ route }) => {
           <View style={styles.quantityContainer}>
             <TouchableOpacity onPress={handleIncrementQuantity}>
               <View style={styles.squareBorder}>
-                <Icon name="plus" size={24} color="white" />
+                <Icon name="plus" size={18} color="white" />
               </View>
             </TouchableOpacity>
             <View style={styles.squareBorder}>
@@ -132,7 +132,7 @@ const ProductScreen = ({ route }) => {
             </View>
             <TouchableOpacity onPress={handleDecrementQuantity}>
               <View style={styles.squareBorder}>
-                <Icon name="minus" size={24} color="white" />
+                <Icon name="minus" size={18} color="white" />
               </View>
             </TouchableOpacity>
           </View>
@@ -147,9 +147,9 @@ const ProductScreen = ({ route }) => {
         <View style={styles.bottomRight}>
           <Text style={styles.productFlavor}>Mezclar</Text>
           <View style={styles.quantityContainer}>
-            <TouchableOpacity onPress={handleIncrementQuantity}>
+            <TouchableOpacity>
               <View style={styles.squareBorder}>
-                <Icon name="plus" size={24} color="white" />
+                <Icon name="key" size={24} color="white" />
               </View>
             </TouchableOpacity>
           </View>
@@ -168,10 +168,7 @@ const ProductScreen = ({ route }) => {
           });
         }}
       >
-        <Image
-          source={require("../../../assets/logo.png")}
-          style={styles.logo}
-        />
+        <Icon name="cart-plus" size={45} color="white" style={styles.logo} />
       </TouchableOpacity>
     </View>
   );
@@ -223,7 +220,7 @@ const styles = StyleSheet.create({
   /*-------------------------*/
   middleColumn: {
     alignItems: "center",
-    height: "95%",
+    height: "85%",
   },
   productName: {
     fontSize: 19,
@@ -255,9 +252,9 @@ const styles = StyleSheet.create({
   },
   quantityText: {
     color: "white",
-    fontSize: 20,
-    marginRight: 5,
-    marginLeft: 5,
+    fontWeight: "bold",
+    marginRight: 3,
+    marginLeft: 3,
   },
   squareBorder: {
     borderWidth: 1,
@@ -326,10 +323,8 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   logo: {
-    width: 80,
-    height: 80,
+    bottom: 40,
     alignSelf: "center",
-    marginBottom: 20,
   },
 });
 
