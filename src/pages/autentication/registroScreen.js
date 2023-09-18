@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../../config/firebase';
 
 export default function RegistroScreen() {
   const [firstName, setFirstName] = useState("");
@@ -42,7 +44,16 @@ export default function RegistroScreen() {
     navigation.navigate("Login");
   };
 
+  const onHandleSignup = (email2, password2) => {
+    if (email2 !== '' && password2 !== '') {
+  createUserWithEmailAndPassword(auth, email2, password2)
+        .then(() => console.log('Signup success'))
+        .catch((err) => Alert.alert("Login error", err.message));
+    }
+  };
+  
   const handleRegistro = async () => {
+    
     try {
       const response = await axios.post(
         "https://xgoobk.ccontrolz.com/user/insert",
@@ -55,8 +66,9 @@ export default function RegistroScreen() {
           profileImage:
             "https://img.freepik.com/fotos-premium/manzana-roja-hoja-verde_914455-660.jpg",
         }
+        
       );
-
+      onHandleSignup(email, password);
       if (response.status === 201) {
         navigation.navigate("Login");
       } else {

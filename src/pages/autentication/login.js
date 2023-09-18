@@ -14,7 +14,8 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
-
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../config/firebase";
 
 const uri = "https://fondosmil.com/fondo/23241.png";
 const profilePicture =
@@ -32,7 +33,13 @@ export default function Login() {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-
+  const onHandleLogin = (email2,password2) => {
+    if (email2 !== "" && password2 !== "") {
+      signInWithEmailAndPassword(auth, email2, password2)
+        .then(() => console.log("Login success"))
+        .catch((err) => Alert.alert("Login error", err.message));
+    }
+  };
   const handleLogin = async () => {
     try {
       const response = await fetch("https://xgoobk.ccontrolz.com/user");
@@ -41,7 +48,7 @@ export default function Login() {
       const user = users.find(
         (user) => user.email == email && user.password == password
       );
-
+      onHandleLogin(user.email,user.password)
       if (user) {
         const birthDate = new Date(user.birthDate);
         const today = new Date();
@@ -101,7 +108,7 @@ export default function Login() {
               letterSpacing: 2,
             }}
           >
-            XGoSTor
+            DIZZGO
           </Text>
           <View>
             <Text style={{ fontSize: 17, color: "#fff", letterSpacing: 1 }}>

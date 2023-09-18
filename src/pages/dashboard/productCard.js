@@ -34,7 +34,9 @@ export default function ProductCard() {
   const handleSearch = () => {
     Alert.alert("Búsqueda", `Buscar productos con: ${searchText}`);
   };
-
+  const handleChatButtonClick = () => {
+    navigation.navigate('Chat');
+  };
   useEffect(() => {
     fetch("https://xgoobk.ccontrolz.com/productsupplier")
       .then((response) => response.json())
@@ -256,8 +258,8 @@ export default function ProductCard() {
         <TouchableOpacity style={styles.socialButtonXD}>
           <Icon name="home" size={20} color="#fff" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.socialButton}>
-          <Icon name="envelope" size={20} color="#fff" />
+        <TouchableOpacity style={styles.socialButton} onPress={handleChatButtonClick}>
+          <Icon name="comment" size={20} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.socialButton}>
           <Icon name="star" size={20} color="#fff" />

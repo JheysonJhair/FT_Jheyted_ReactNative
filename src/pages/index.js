@@ -1,38 +1,32 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
 import * as Animatable from "react-native-animatable";
 
 const Welcome = () => {
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.navigate("Login");
+    }, 4000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
       <View style={styles.containerLogo}>
-        <Image source={require("../../assets/logo.png")} style={styles.logo} />
         <Animatable.Text animation="flipInX" style={styles.containerLogoText}>
-          XGoStor
+          DIZZGO
         </Animatable.Text>
       </View>
-
-      <Animatable.View
-        delay={700}
-        animation="fadeInUp"
-        style={styles.containerForm}
-      >
-        <Text style={styles.Title}>Tus Bebidas favoritas</Text>
-        <Text style={styles.text}>Ahora en un solo lugar.</Text>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("Login")}
-        >
-          <Text style={styles.buttonText}>Empezar</Text>
-        </TouchableOpacity>
-      </Animatable.View>
     </View>
   );
 };
+
 
 // Estilos
 const styles = StyleSheet.create({
