@@ -35,7 +35,7 @@ export default function ProductCard() {
     Alert.alert("Búsqueda", `Buscar productos con: ${searchText}`);
   };
   const handleChatButtonClick = () => {
-    navigation.navigate('Chat');
+    navigation.navigate('Chat', { userProfileImage: perfil });
   };
   useEffect(() => {
     fetch("https://xgoobk.ccontrolz.com/productsupplier")

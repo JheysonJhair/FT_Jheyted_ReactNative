@@ -5,6 +5,7 @@ import React, {
 } from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
+import { useRoute } from '@react-navigation/native';
 import {
   collection,
   addDoc,
@@ -23,6 +24,10 @@ export default function Chat() {
 
   const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
+
+  const route = useRoute();
+  const userProfileImage = route.params?.userProfileImage || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBsrVkBPXQR8W4sUq72MysJL_sBtjQy_BnRQ'; 
+
 
 const onSignOut = () => {
     signOut(auth).catch(error => console.log('Error logging out: ', error));
@@ -91,7 +96,7 @@ const onSignOut = () => {
         }}
         user={{
           _id: auth?.currentUser?.email,
-          avatar: 'https://i.pravatar.cc/300'
+          avatar: userProfileImage,
         }}
       />
     );

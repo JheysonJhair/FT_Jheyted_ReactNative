@@ -64,7 +64,7 @@ export default function RegistroScreen() {
           lastName,
           birthDate,
           profileImage:
-            "https://img.freepik.com/fotos-premium/manzana-roja-hoja-verde_914455-660.jpg",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBsrVkBPXQR8W4sUq72MysJL_sBtjQy_BnRQ",
         }
         
       );
