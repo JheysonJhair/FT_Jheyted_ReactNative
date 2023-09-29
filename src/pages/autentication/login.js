@@ -9,8 +9,8 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView, 
-  Platform, 
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -33,7 +33,7 @@ export default function Login() {
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  const onHandleLogin = (email2,password2) => {
+  const onHandleLogin = (email2, password2) => {
     if (email2 !== "" && password2 !== "") {
       signInWithEmailAndPassword(auth, email2, password2)
         .then(() => console.log("Login success"))
@@ -48,7 +48,7 @@ export default function Login() {
       const user = users.find(
         (user) => user.email == email && user.password == password
       );
-      onHandleLogin(user.email,user.password)
+      onHandleLogin(user.email, user.password);
       if (user) {
         const birthDate = new Date(user.birthDate);
         const today = new Date();

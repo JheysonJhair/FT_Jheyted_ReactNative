@@ -10,11 +10,13 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  Alert, 
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../../../config/firebase';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../config/firebase";
+import * as ImagePicker from "expo-image-picker";
 
 export default function RegistroScreen() {
   const [firstName, setFirstName] = useState("");
@@ -22,6 +24,26 @@ export default function RegistroScreen() {
   const [birthDate, setBirthDate] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+
+  const selectImage = async () => {
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      console.log("Permiso para acceder a la galería de imágenes denegado");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!pickerResult.canceled) {
+      setProfileImage(pickerResult);
+    }
+  };
 
   const navigation = useNavigation();
   const uri = "https://fondosmil.com/fondo/23241.png";
@@ -45,15 +67,18 @@ export default function RegistroScreen() {
   };
 
   const onHandleSignup = (email2, password2) => {
-    if (email2 !== '' && password2 !== '') {
-  createUserWithEmailAndPassword(auth, email2, password2)
-        .then(() => console.log('Signup success'))
-        .catch((err) => Alert.alert("Login error", err.message));
+    if (email2 !== "" && password2 !== "") {
+      createUserWithEmailAndPassword(auth, email2, password2)
+        .then(() => {
+          console.log("Signup success");
+          setEmail("");
+          setPassword("");
+        })
+        .catch((err) => Alert.alert("Error al registrarse", err.message));
     }
   };
-  
+
   const handleRegistro = async () => {
-    
     try {
       const response = await axios.post(
         "https://xgoobk.ccontrolz.com/user/insert",
@@ -66,7 +91,6 @@ export default function RegistroScreen() {
           profileImage:
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBsrVkBPXQR8W4sUq72MysJL_sBtjQy_BnRQ",
         }
-        
       );
       onHandleSignup(email, password);
       if (response.status === 201) {
@@ -141,7 +165,25 @@ export default function RegistroScreen() {
               onChangeText={(text) => setPassword(text)}
             />
           </View>
-
+          <View style={styles.imageContainer}>
+            <TouchableOpacity style={styles.imageButton} onPress={selectImage}>
+              <Text style={styles.buttonText}>Subir Perfil</Text>
+              <Icon
+                name="upload"
+                size={24}
+                color="#fff"
+                style={styles.uploadIcon}
+              />
+            </TouchableOpacity>
+            {profileImage && (
+              <View style={styles.imagePreviewContainer}>
+                <Image
+                  source={{ uri: profileImage.uri }}
+                  style={styles.imagePreview}
+                />
+              </View>
+            )}
+          </View>
           <TouchableOpacity style={styles.button} onPress={handleRegistro}>
             <Text
               style={{
@@ -233,5 +275,46 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#fff",
     fontWeight: "bold",
+  },
+  /**/
+  imageContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: 300,
+    marginBottom: 20,
+  },
+  imageButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "55%",
+    height: 50,
+    backgroundColor: "#393989",
+    borderRadius: 10,
+    marginRight: 10,
+    borderWidth: 1, 
+    borderColor: "#fff", 
+  },
+
+  buttonText: {
+    fontSize: 18,
+    color: "#fff",
+    letterSpacing: 2,
+    fontWeight: 700,
+    marginRight: 10,
+  },
+  uploadIcon: {
+    marginRight: 5,
+  },
+  imagePreviewContainer: {
+    width: "35%", 
+    height: 100,
+    borderRadius: 50,
+    overflow: "hidden",
+  },
+  imagePreview: {
+    width: "100%",
+    height: "100%",
   },
 });
