@@ -51,4 +51,4 @@ npm start
 
 4. Seleccione la opción de preferencia y ejecuta.
 
-¡Listo! Ahora puedes comenzar a trabajar en el Sistema sin problemas.
+¡Listo! Ahora puedes comenzar a trabajar en la aplicación sin problemas.
